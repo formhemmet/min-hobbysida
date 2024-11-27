@@ -1,51 +1,188 @@
-/* Vi resettar lite värden satta av webbläsaren */
+/* Vi importerar font från Google Fonts här */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+/* Vi skriver över värden satta av webbläsaren */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-/* Vi skapar lite variabler för att slippa upprepa återkommande egenskaper hos element */
+
+/* Några CSS variabler för att slippa upprepa återkommande egenskaper hos element */
 :root {
-  --gap-y: 1rem;
-  --bg-primary: grey;
+  --base: 4; /* Gillar nummer 4 */
+  --base-unit: 1px;
+  --base-fontsize: calc(
+    var(--base) * 4 * var(--base-unit)
+  ); /* Vi sätter vår egen defintion av 1rem */
+  --ratio: 1.33;
+
+  --gap-y: 1.5rem; /* 1 rem är per default 16 px */
+
+  --white: #fff;
+  --color-mono-900: #222222;
+  --color-canvas: #f4f4f4;
+  --border-radius: 16px; /* Lite runt vill vi ha det */
+
+  --text-size-base: calc(var(--base-fontsize));
+  --text-size-1: calc(var(--text-size-2) * var(--ratio));
+  --text-size-2: calc(var(--text-size-3) * var(--ratio));
+  --text-size-3: calc(var(--text-size-base) * var(--ratio));
+
+  --font-family-sans: "IBM Plex Mono", monospace;
+  --font-body: var(--font-family-sans);
+
+  --body-padding: calc(
+    var(--base-unit) * var(--base) * 4
+  ); /* Addera lite space till webbläsarens fömster, 16 px (4 * --base) */
+
+  --container-width: 600px; /* Vi vill styra hur brett vårt innehåll är */
+
+  --navigation-flow: column;
+}
+
+/* Lite responsivitet kring våra CSS variabler */
+@media (min-width: 768px) {
+  /* Här kommer vi implemetera UTOPIAs koncept kring vertikal rytm kring text (och även "space" sedan vilket kommer ersätt våra inte så "smarta" hemmasnickrade efter "eget huvud" variabler */
+  :root {
+    --navigation-flow: row;
+  }
 }
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 400;
   line-height: 1.4;
-  padding: 30px;
+  font-size: var(--base-size-base);
+  font-family: var(--font-body);
+  padding: var(--body-padding);
+  color: var(--color-mono-900);
+  background-color: var(--color-canvas);
+}
+.container {
+  max-width: var(--container-width); /* Det blir aldrig bredare än så här för våra .container */
+  margin: 0 auto; /* Vi vill ha den centrerad horisontalt */
+}
+a {
+  color: var(color-mono-900);
+  transition: cubic-bezier(0.39, 0.575, 0.565, 1);
+  color: var(--color-mono-900);
+}
+a:hover {
 }
 
+nav {
+  position: relative;
+  height: auto;
+  width: 100%;
+}
 nav > ul {
   display: flex;
-  flex-direction: row;
+  flex-direction: var(
+    --navigation-flow
+  ); /* Våra meny alternativ är row/column beroende på @media definierat högre upp. */
+  width: 100%;
+  grid-gap: 0.75rem; /*Avståndet mellan våra <li> element */
+  margin-bottom: 1rem;
 }
-nav > ul > li {
-  list-style-type: none;
-  padding: 2px;
+nav > ul li {
+  flex: 1; /* Låt vår li ta upp lika mycket bredd av ul*/
+  list-style-type: none; /* Inga punkter */
+  padding: 4px 4px;
+  text-align: center;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-mono-900);
+}
+nav li:hover {
+  cursor: pointer;
+  background-color: var(--color-mono-900);
+}
+nav li a {
+  color: var(--color-mono-900);
+}
+nav li:hover a {
+  color: var(--white);
+}
+nav a {
+  padding: 4px 8px;
+  text-decoration: none;
 }
 
 main {
-  display: grid;
+  display: grid; /* Vi sätter grid för att kunna använda gap för att styra avstånd mellan element. */
   grid-gap: var(--gap-y);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   background-color: var(--bg-primary);
-  padding: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  border: 1px solid var(--color-mono-900);
 }
 
 h1,
 h2,
 h3 {
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 1rem;
 }
-ul {
-  list-style-type: disc;
-  display: grid;
-  grid-gap: 10px;
+h1 {
+  font-size: var(--text-size-1);
+  text-align: center;
 }
-ul li {
-  color: red;
+h2 {
+  font-size: var(--text-size-2);
+  font-weight: 400;
+}
+h3 {
+  font-weight: 500;
+}
+
+header h1 {
+  padding-top: 1.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+main ul {
+  list-style-type: none;
+  display: grid;
+  row-gap: 10px;
+}
+main li ul {
+  margin-top: 10px;
+}
+main ul li {
   list-style-position: inside;
+  text-indent: -20px;
+  padding-left: 20px;
+  margin-bottom: 4px;
+}
+main ul li:before {
+  content: "___";
+}
+
+main ul ul li:before {
+}
+
+.cta {
+  padding: 20px;
+  text-align: center;
+  color: var(--color-canvas);
+  background-color: var(--color-mono-900);
+  border-radius: var(--border-radius);
+}
+.btn {
+  display: block;
+  border-radius: var(--border-radius);
+  background-color: var(--color-canvas);
+  padding: 4px 12px;
+  margin-bottom: 1rem;
+}
+footer ul {
+  display: flex;
+  padding: 24px 0;
+  list-style: none;
+  justify-content: center;
+  column-gap: 2rem;
 }
